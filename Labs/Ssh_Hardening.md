@@ -87,9 +87,33 @@ s / find / replace /
 #* =  zero or more # characters (the line might be commented out as #PermitRootLogin, or not).
 PermitRootLogin = The actual text
 .* = anything else at the end of the line (like no, or prohibit-password)
-
 ```
+# Start the server now!
+```
+/usr/sbin/sshd
+```
+Silence means it started. If it complains something is broken run ssh-keygen -A again. 
 
+# Now let's check with a command if our server is good or not!
+```
+netstat -tlnp | grep 22
+```
+The command:
+netstat = show network connections
+-t = TCP only
+-l = only things listening (waiting for connections)
+-n = show numbers, not names (port 22, not "ssh")
+-p = show which program owns it
+| grep 22 = filter to lines with 22 -> port 22 cause it's secure shell default port.
+
+Output ->
+
+<img width="867" height="85" alt="image" src="https://github.com/user-attachments/assets/2bda259a-fd14-4f63-9b60-4c1a91a0d9c6" />
+
+0.0.0.0:22 ... LISTEN 32/sshd =  sshd waiting on connection port 22 via IPV4 - 0.0.0.0 meaning any address on this box!
+LISTEN 32 - 32 means is the process ID for sshd.
+
+**Bottom line: yes, the server is up, and it's reachable from the network, not just locally. That last part is why root login being on is a real finding.**
 
 
 
