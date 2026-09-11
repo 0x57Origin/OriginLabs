@@ -64,9 +64,15 @@ echo 'randomUserName:randomUserPassword' | chpasswd -> chpasswd stands for Chang
 echo 'root:123' | chpasswd -> Chaining the root users password.
 
 <img width="590" height="162" alt="image" src="https://github.com/user-attachments/assets/ca8e8421-4e86-4745-81f3-34e7fefe530e" />
----
 
+---
 ## Now we get to break the server!!
+```
+Turn root login on and start the SSH server:
+sed -i 's/^#*PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+/usr/sbin/sshd
+```
+
 
 
 
