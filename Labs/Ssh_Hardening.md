@@ -72,11 +72,21 @@ Turn root login on and start the SSH server:
 sed -i 's/^#*PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
 /usr/sbin/sshd
 
+Explanation:
 sed - stream editor. Alpine used sed to find and replace something in a file.
 -i - in place. Edit and save it right away without printing it on the screen.
 s - substitue.
 ^#*PermitRootLogin.* - What to find.
 PermitRootLogin yes -  What to replace it with.
+
+Breakdown of regex:
+The / is just a divider. It separates the three parts of the substitute command:
+s / find / replace /
+
+^ = start of line
+#* =  zero or more # characters (the line might be commented out as #PermitRootLogin, or not).
+PermitRootLogin = The actual text
+.* = anything else at the end of the line (like no, or prohibit-password)
 
 ```
 
