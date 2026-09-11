@@ -7,5 +7,6 @@
 sudo apt update && sudo apt install -y docker.io
 sudo systemctl enable --now docker
 ```
-Then in kali terminal put **systemctl status docker** and it will give you the systemmd service logs and you will see **Active: active (running)** in green coloring.
+Then in kali terminal put **systemctl status docker** and it will give you the systemd service logs and you will see **Active: active (running)** in green coloring.
+systemd is the core system & service manager for Linux OS. systemd -> System daemon 
 
