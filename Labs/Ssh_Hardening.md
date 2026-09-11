@@ -59,11 +59,14 @@ ssh-keygen -A will create 4 pair host keys (One for each major encryption) -> RS
 
 adduser -D randomUserName - > -D stand for do not assign a password, it will create the account and right away lock it so no-one can log in.
 
-echo 'randomUserName:RandomPassword123!' | chpasswd -> chpasswd stands for Change Password. 
+echo 'randomUserName:randomUserPassword' | chpasswd -> chpasswd stands for Change Password. 
 
 echo 'root:123' | chpasswd -> Chaining the root users password.
 
 <img width="590" height="162" alt="image" src="https://github.com/user-attachments/assets/ca8e8421-4e86-4745-81f3-34e7fefe530e" />
+---
+
+## Now we get to break the server!!
 
 
 
