@@ -9,4 +9,12 @@ sudo systemctl enable --now docker
 ```
 Then in kali terminal put **systemctl status docker** and it will give you the systemd service logs and you will see **Active: active (running)** in green coloring.
 systemd is the core system & service manager for Linux OS. systemd -> System daemon 
+---
+## Alpine OS - Just a few MB download. 
+```
+sudo docker run -dit --name VulBuild alpine
+sudo docker exec -it arcbuild sh
+```
+First Command -> It will download the alpine image .iso and create a container called VulBuild and start it and leave it running. -d is the operator that let you run it in the background.
 
+Second Command -> Basically go into the VulBuild container that is already running and open a shell.
