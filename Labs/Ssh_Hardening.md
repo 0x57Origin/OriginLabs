@@ -114,8 +114,12 @@ Output ->
 LISTEN 32 - 32 means is the process ID for sshd.
 
 **Bottom line: yes, the server is up, and it's reachable from the network, not just locally. That last part is why root login being on is a real finding.**
-
-
+---
+## Let's see our finding
+```
+ssh root@localhost
+```
+Once that happens type in the password!
 
 
 
