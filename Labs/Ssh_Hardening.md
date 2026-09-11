@@ -71,12 +71,14 @@ echo 'root:123' | chpasswd -> Chaining the root users password.
 Turn root login on and start the SSH server:
 sed -i 's/^#*PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
 /usr/sbin/sshd
-```
+
 sed - stream editor. Alpine used sed to find and replace something in a file.
 -i - in place. Edit and save it right away without printing it on the screen.
 s - substitue.
 ^#*PermitRootLogin.* - What to find.
 PermitRootLogin yes -  What to replace it with.
+
+```
 
 
 
