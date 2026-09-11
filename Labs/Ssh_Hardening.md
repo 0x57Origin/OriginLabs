@@ -39,3 +39,37 @@ e7a56772d35ab964551832a7d3fc6efaf486e6674b9857d27b4e6fb188e08860
 root
 / # 
 ```
+# Alpine Commands 
+```
+apk update
+apk add openssh openrc
+```
+Now Alpine handles server service a tad bit different than Debian. So we will need openssh which is the SERVER & CLIENT. openrc is Alpine's service manager. 
+---
+# I'm going to add the host keys and accounts so I can make it act like a real server
+```
+ssh-keygen -A
+adduser -D randomUserName
+echo 'randomUserName:RandomPassword123!' | chpasswd
+echo 'root:Root123!' | chpasswd
+```
+Host keys? They are unique cryptographic keys that the SSH server uses to identify itself and secure the initial connection to clients.
+
+ssh-keygen -A will create 4 pair host keys (One for each major encryption) -> RSA, ECDSA, ED25519, and DSA  and also it will not break your working keys or mess with keys that already exists on the server / system. If your server is missing an RSA key but already has an ED25519 key, it will only create the missing RSA key and leave the ED25519 key completely alone.
+
+adduser -D randomUserName - > -D stand for do not assign a password, it will create the account and right away lock it so no-one can log in.
+
+echo 'randomUserName:RandomPassword123!' | chpasswd -> chpasswd stands for Change Password. 
+
+echo 'root:123' | chpasswd -> Chaining the root users password.
+
+<img width="590" height="162" alt="image" src="https://github.com/user-attachments/assets/ca8e8421-4e86-4745-81f3-34e7fefe530e" />
+
+
+
+
+
+
+
+
+
