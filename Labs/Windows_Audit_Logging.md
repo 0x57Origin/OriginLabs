@@ -1,6 +1,6 @@
 # Windows Logging & Event Detection
 ---
-## We will enable windows audit policy on a Windows 11 VM and also detect failed logins attempts - NIST 800-171: 3.3.1
+## Enabling Windows 11 audit policy and detecting process creation events (Event ID 4688) - NIST 800-171: 3.3.1
 ---
 ### We need to check if the audit logging is even on first! (audit policy)
 -> Open PowerShell @admin and type: auditpol /get /category:*
