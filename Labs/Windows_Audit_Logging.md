@@ -103,7 +103,8 @@ Detailed Tracking
   Process Creation                        Success
 PS C:\WINDOWS\system32>
 ```
-Success!!!
+Success
+
 ---
 # Launch Notepad 
 ```
