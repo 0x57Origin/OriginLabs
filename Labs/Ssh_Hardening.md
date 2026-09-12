@@ -1,5 +1,4 @@
-# I am currently locking down SSH (Secure Shell) on a Linux box: turn off root login and lock the account after the 3rd bad password, then prove that it worked!
-
+# SSH Hardening: Disabling Root Login and Enforcing Account Lockout (NIST 800-171: 3.1.1, 3.1.8)
 ---
 
 ## I am going to use Kali for this, but I'm not really going to mess with my Kali settings, so Docker it is.
