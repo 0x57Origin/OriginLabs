@@ -94,6 +94,13 @@ After that we will dump the audit policy again and see if it's there now using -
 
 <img width="1917" height="242" alt="image" src="https://github.com/user-attachments/assets/1afe6f50-3aa8-4d87-9f1e-5d39a4130e03" />
 
-
-
-
+Or we could do straight process creation dump -> auditpol /get /subcategory:"Process Creation"
+```
+PS C:\WINDOWS\system32> auditpol /get /subcategory:"Process Creation"
+System audit policy
+Category/Subcategory                      Setting
+Detailed Tracking
+  Process Creation                        Success
+PS C:\WINDOWS\system32>
+```
+Success!!!
