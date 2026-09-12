@@ -2,6 +2,7 @@
 ---
 My Windows VM already gathers baseline process creation so we do not need to mess with audit policy. So we can just go ahead and download Sysmon (System Monitor).
 ---
+
 We can download it straight from PowerShell into a folder from Windows Sysinternals.
 PowerShell:
 ```
