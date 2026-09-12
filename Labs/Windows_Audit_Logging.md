@@ -106,9 +106,10 @@ PS C:\WINDOWS\system32>
 Success!!!
 ---
 # Launch Notepad 
+```
 Shell -> Notepad -> It will get logged as event ID 4688. Now let's find it in the log. Pull the most recent 4688 events:
-
 Shell -> Get-WinEvent -FilterHashtable @{LogName='Security'; ID=4688} -MaxEvents 5 | Format-List TimeCreated, Message
+```
 
 ```
 TimeCreated : 9/11/2026 8:39:13 PM
