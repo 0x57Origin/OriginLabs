@@ -81,3 +81,19 @@ Account Logon
   Credential Validation                   No Auditing
 PS C:\WINDOWS\system32>
 ```
+---
+What jumps off right away is the Detailed Audit -> Process Creation: No Auditing. So right now windows is not logging when a new process meaning program launches. Something attackers loveeee. Any malware can run on this windows and nobody would know. Turn this on asap.
+
+Now we will turn on the Process Creation on and then launch a program and see if it logs or not.
+
+Okay in admin shell we have to type this: auditpol /set /subcategory:"Process Creation" /success:enable
+
+<img width="1915" height="137" alt="image" src="https://github.com/user-attachments/assets/5dbafc68-1a22-4864-8594-7769bb46b108" />
+
+After that we will dump the audit policy again and see if it's there now using -> auditpol /get /category:*
+
+<img width="1917" height="242" alt="image" src="https://github.com/user-attachments/assets/1afe6f50-3aa8-4d87-9f1e-5d39a4130e03" />
+
+
+
+
