@@ -104,3 +104,54 @@ Detailed Tracking
 PS C:\WINDOWS\system32>
 ```
 Success!!!
+---
+# Launch Notepad 
+Shell -> Notepad -> It will get logged as event ID 4688. Now let's find it in the log. Pull the most recent 4688 events:
+
+Shell -> Get-WinEvent -FilterHashtable @{LogName='Security'; ID=4688} -MaxEvents 5 | Format-List TimeCreated, Message
+
+```
+TimeCreated : 9/11/2026 8:39:13 PM
+Message     : A new process has been created.
+
+              Creator Subject:
+                Security ID:            S-1-5-21-3841895432-4071795221-4240210549-1001
+                Account Name:           Someone Unknown
+                Account Domain:         DESKTOP-APE8POJ
+                Logon ID:               0x480C1
+
+              Target Subject:
+                Security ID:            S-1-0-0
+                Account Name:           -
+                Account Domain:         -
+                Logon ID:               0x0
+
+              Process Information:
+                New Process ID:         0x18cc
+                New Process Name:       C:\Program
+              Files\WindowsApps\Microsoft.WindowsNotepad_11.2607.14.0_x64__8wekyb3d8bbwe\Notepad\Notepad.exe
+                Token Elevation Type:   TokenElevationTypeFull (2)
+                Mandatory Label:                S-1-16-12288
+                Creator Process ID:     0x11ec
+                Creator Process Name:   C:\Program
+              Files\WindowsApps\Microsoft.WindowsNotepad_11.2607.14.0_x64__8wekyb3d8bbwe\Notepad\Notepad.exe
+                Process Command Line:
+
+              Token Elevation Type indicates the type of token that was assigned to the new process in accordance with
+              User Account Control policy.
+
+              Type 1 is a full token with no privileges removed or groups disabled.  A full token is only used if User
+              Account Control is disabled or if the user is the built-in Administrator account or a service account.
+
+              Type 2 is an elevated token with no privileges removed or groups disabled.  An elevated token is used
+              when User Account Control is enabled and the user chooses to start the program using Run as
+              administrator.  An elevated token is also used when an application is configured to always require
+              administrative privilege or to always require maximum privilege, and the user is a member of the
+              Administrators group.
+
+              Type 3 is a limited token with administrative privileges removed and administrative groups disabled.
+              The limited token is used when User Account Control is enabled, the application does not require
+              administrative privilege, and the user does not choose to start the program using Run as administrator.
+```
+
+There it is !!! Also if you want to revert -> To revert: auditpol /set /subcategory:"Process Creation" /success:disable
