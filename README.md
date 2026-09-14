@@ -10,3 +10,7 @@ Hands-on labs I've worked through, with findings, fixes, and evidence.
 ## Labs - Red / Exploitation Research
 
 - [Network Stack Overflow](Exploit_Research/Network_Stack_Overflow.md) - Built a vulnerable C server then fuzzing it with Python to see how an oversized write smashes the saved return address. It does cover a lot of information that is required for exploit/fuzzing research like buffer overflows, the stack frame, hex/bytes, and why crashes happen.
+
+## Quick Fixes
+
+- [No Internet on Windows 11 VM](QuickFixes/No_Internet_VirtualBox.md) - VirtualBox VM had no route out. I traced it to the adapter settings sitting on a dead network plus an old static IP address left over from a pfSense lab. Fixed it by setting adapter back on live network and flipping Windows back to DHCP. 
