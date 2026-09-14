@@ -9,4 +9,4 @@ Hands-on labs I've worked through, with findings, fixes, and evidence.
 
 ## Labs - Red / Exploitation Research
 
-- [Network Stack Overflow](Exploit_Research/Network_Stack_Overflow.md) - Building a vulnerable C server then fuzzing it with Python to see how an oversized write smashes the saved return address. It does cover a lot of information that is required for exploit/fuzzing research like buffer overflows, the stack frame, hex/bytes, and why crashes happen.
+- [Network Stack Overflow](Exploit_Research/Network_Stack_Overflow.md) - Built a vulnerable C server then fuzzing it with Python to see how an oversized write smashes the saved return address. It does cover a lot of information that is required for exploit/fuzzing research like buffer overflows, the stack frame, hex/bytes, and why crashes happen.
