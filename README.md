@@ -7,6 +7,8 @@ Hands-on labs I've worked through, with findings, fixes, and evidence.
 
 - [Windows Audit Logging](Labs/Windows_Audit_Logging.md) - Enable Windows 11 process creation auditing, launch a process, and get the Event ID 4688 record that proves it was logged. It was done with Notepad as proof.
 
+- [Sysmon Deployment](Labs/Sysmon_Deployment.md) - I installed Sysmon with a config, confirm events are landing, then read a process-create event field by field. Ran a  encoded PowerShell command, caught it in the log by filtering for `-enc`, and decoded it to prove intent.
+
 ## Labs - Red / Exploitation Research
 
 - [Network Stack Overflow](Exploit_Research/Stack_Overflow_Exploit/Network_Stack_Overflow.md) - Built a vulnerable C server then fuzzing it with Python to see how an oversized write smashes the saved return address. It does cover a lot of information that is required for exploit/fuzzing research like buffer overflows, the stack frame, hex/bytes, and why crashes happen.
