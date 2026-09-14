@@ -6,7 +6,7 @@ Hands-on labs I've worked through, with findings, fixes, and evidence.
 ### Detection & Logging
 
 - [Windows Audit Logging](Labs/Windows_Audit_Logging.md) - Enable Windows 11 process creation auditing, launch a process, and get the Event ID 4688 record that proves it was logged. It was done with Notepad as proof.
-- 
+
 - [Sysmon Deployment](Labs/Sysmon_Deployment.md) - I installed Sysmon with a config, confirm events are landing, then read a process-create event field by field. Ran an encoded PowerShell command, caught it in the log by filtering for `-enc`, and decoded it to prove intent. It is a beginner version but it does cover a lot of the Sysmon commands. P.S it logs more than you would think.
 
 ### Hardening & Baselines
