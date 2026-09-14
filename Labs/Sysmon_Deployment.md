@@ -19,4 +19,4 @@ Sysmon.zip - The source zip file.
 
 ---
 
-
+Also Sysmon is CLI program. Open PowerShell and CD into the Sysmon folder and run it there -> .\Sysmon64.exe
