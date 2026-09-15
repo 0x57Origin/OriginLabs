@@ -32,4 +32,5 @@ Hands-on labs I've worked through, with findings, fixes, and evidence.
 
 ## Cheat Sheet
 
-1\. [Firewall Commands](Cheat_Sheet/FIreWall.md) - Basic Firewall Commands.
+1\. [Firewall Commands](Cheat_Sheet/FireWall.md) - Basic Firewall Commands.
+2\. [Sysmon_Commands](/Cheat_Sheet/Sysmon_Commands.md) - Basic Sysmon Commands.
