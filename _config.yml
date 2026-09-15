@@ -63,7 +63,3 @@ plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
 
-# Don't build these into the site
-exclude:
-  - README.md
-  - vendor
