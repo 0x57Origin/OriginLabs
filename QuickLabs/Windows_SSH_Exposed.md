@@ -14,7 +14,7 @@ https://www.shodan.io/host/12.98.23.22
 
 404: Not Found
 Note:
-No information available for 12.157.79.124
+No information available for 12.98.23.22
 ```
 Well that is a very good sign but also remember Shodan is also an old photo if you were not in the photo does not mean you were not there when the photo was taken. Let's test our system live.
 
