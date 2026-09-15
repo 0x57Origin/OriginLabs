@@ -29,3 +29,7 @@ Hands-on labs I've worked through, with findings, fixes, and evidence.
 ## Quick Fixes
 
 1\. [No Internet on Windows 11 VM](QuickFixes/No_Internet_VirtualBox.md) - VirtualBox VM had no route out. Traced it to the adapter sitting on a dead network plus an old static IP left over from a pfSense lab. Fixed it by putting the adapter back on the live network and flipping Windows back to DHCP.
+
+## Cheat Sheet
+
+1\. [Firewall Commands](Cheat_Sheet/FIreWall.md) - Basic Firewall Commands.
