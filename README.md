@@ -20,7 +20,7 @@ Hands-on labs I've worked through, with findings, fixes, and evidence.
 
 ## Vulnerability Research
 
-### Memory Safety
+### Stack Overflow Exploitation Research
 
 1\. [Network Stack Overflow](Exploit_Research/Stack_Overflow_Exploitation/Network_Stack_Overflow.md) - Built a small vulnerable C server, fuzzed it with Python, and watched an oversized write overwrite the saved return address. Covers the stack frame, hex and bytes, and why the crash happens.
 
