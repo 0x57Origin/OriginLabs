@@ -158,9 +158,13 @@ It logged it in Sysmon. Sysmon logs the initial attempt but remember Sysmon did 
 Explanation of the command:
 
 $_ = Represents the current log entry.
+
 .Id = Access the specific ID. Which is 3 for Sysmon here.
+
 -eq 3 =  Equals 3. Filtering the logs to keep only Sysmon Event ID 3 (Network Connection events).
+
 .Message = Access the text body of the log.
+
 -match "1.1.1.1" = Filters the logs to keep only the entries where the text body contains the IP address 1.1.1.1
 
 That is all for this lab. 
