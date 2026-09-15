@@ -100,7 +100,7 @@ TcpTestSucceeded       : False
 
 But for me it is working. 
 
-# Now let's check the Firewall Loggin
+# Now let's check the Firewall Logging
 
 Let's first configure the firewall to record every blocked packet into a text log file and it's called = pfirewall.log. Very important or firewall won't keep a record of it. **It is not turned on by default**.
 
