@@ -30,6 +30,9 @@ Hands-on labs I've worked through, with findings, fixes, and evidence.
 
 1\. [No Internet on Windows 11 VM](QuickFixes/No_Internet_VirtualBox.md) - VirtualBox VM had no route out. Traced it to the adapter sitting on a dead network plus an old static IP left over from a pfSense lab. Fixed it by putting the adapter back on the live network and flipping Windows back to DHCP.
 
+## Quick Labs
+1\. [Is_Windows_SSH_Exposed](QuickLabs/Windows_SSH_Exposed.md) - Simple checks to gather information about the windows SSH: Exposed or Not Exposed.
+
 ## Cheat Sheet
 
 1\. [Firewall Commands](Cheat_Sheet/FireWall.md) - Basic Firewall Commands.
