@@ -16,7 +16,7 @@ Hands-on labs I've worked through, with findings, fixes, and evidence.
 
 ### Response & Containment
 
-1\. [Windows Firewall Blocking](Blue_Team/Response_Containment/Windows_Firewall_Blocking.md) - Block an outbound connection with a Windows Firewall rule and confirm the traffic is stopped.
+1\. [Windows Firewall Blocking](Blue_Team/Response_Containment/Windows_Firewall_Blocking.md) - Block an outbound connection with a Windows Firewall rule and confirm the traffic is stopped. Source: Firewall Logging & Sysmon Event ID 3.
 
 ## Vulnerability Research
 
