@@ -20,7 +20,7 @@ Hands-on labs I've worked through, with findings, fixes, and evidence.
 3. [SSH Hardening](Blue_Team/Hardening_Baselines/Ssh_Hardening.md) - Turned off root SSH login and added a fail2ban lockout in a Docker container, then proved it with logs and config checks.
 
 ### Response & Containment
-{:start="4"}
+
 4. [Windows Firewall Blocking](Blue_Team/Response_Containment/Windows_Firewall_Blocking.md) - Block an outbound connection with a Windows Firewall rule and confirm the traffic is stopped.
 
 ## Vulnerability Research
