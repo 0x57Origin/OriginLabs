@@ -30,7 +30,7 @@ Hands-on labs I've worked through, with findings, fixes, and evidence.
 
 ## Read Team / Pentest 
 ### Lab Setup
-[Building the Isolated Lab Network](Pentesting/Lab_Setup_Recon/Isolated_Lab.md) -  Built a host-only network in VirtualBox, Windows 11 VM, Kali VM , Juice Shop in Docker.
+[Building the Isolated Lab Network](Pentesting/Lab_Setup/Isolated_Lab.md) -  Built a host-only network in VirtualBox, Windows 11 VM, Kali VM , Juice Shop in Docker.
 
 ## Quick Fixes
 
