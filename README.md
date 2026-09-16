@@ -14,6 +14,8 @@ Hands-on labs I've worked through, with findings, fixes, and evidence.
 
 1\. [SSH Hardening](Blue_Team/Hardening_Baselines/Ssh_Hardening.md) - Turned off root SSH login and added a fail2ban lockout in a Docker container, then proved it with logs and config checks.
 
+2\. [CIS baseline check on Windows](Blue_Team/Hardening_Baselines/Windows_CIS_Baseline_Check.md) - I scanned a Windows 11 Enterprise VM with the tool called CIS-CAT Lite, received a 27% baseline score. This lab just shows how to scan the system and read that report.
+
 ### Response & Containment
 
 1\. [Windows Firewall Blocking](Blue_Team/Response_Containment/Windows_Firewall_Blocking.md) - Block an outbound connection with a Windows Firewall rule and confirm the traffic is stopped. Source: Firewall Logging & Sysmon Event ID 3.
