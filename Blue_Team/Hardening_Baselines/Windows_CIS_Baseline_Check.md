@@ -26,7 +26,7 @@ I'm running this lab on a Windows 11 Enterprise VM. If you follow along, use a V
 
 **Why the snapshot:** some CIS settings can break applications in Windows. The snapshot is your rollback point if something stops working.
 
-We'll also find the exact Windows 11 build, so the scores can be tied to that specific build.
+We'll also find the exact Windows 11 build, so the scores can be tied to that specific build. Mine is -> **Host:** Windows 11 Enterprise Evaluation, Version 25H2 (OS Build 26200.6584)
 
 ---
 
