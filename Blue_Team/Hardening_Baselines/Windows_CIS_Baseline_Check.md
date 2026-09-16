@@ -26,7 +26,7 @@ I'm running this lab on a Windows 11 Enterprise VM. If you follow along, use a V
 
 **Why the snapshot:** some CIS settings can break applications in Windows. The snapshot is your rollback point if something stops working.
 
-We'll also find the exact Windows 11 build, so the scores can be tied to that specific build. 
+We'll also find the exact Windows 11 build, so the scores can be tied to that specific build.
 
 Mine is -> **Host:** Windows 11 Enterprise Evaluation, Version 25H2 (OS Build 26200.6584)
 
@@ -45,7 +45,7 @@ https://learn.cisecurity.org/cis-cat-lite
 Run `Assessor-GUI.exe` as an administrator. When it opens up:
 
 1. Click the **Basic** tab.
-2. Scroll down and select **CIS Microsoft Windows 11 Enterprise Benchmark v5.1.0**, then click **Add**.
+2. Scroll down and select **CIS Microsoft Windows 11 Enterprise Benchmark v5.1.0**, pick **Level 1 (L1)**, then click **Add**.
 3. Leave the temporary path on default.
 4. Report Output Options: leave it as it is.
 5. Then it will ask you if you want to start the assessment.
@@ -72,7 +72,7 @@ Run `Assessor-GUI.exe` as an administrator. When it opens up:
 | 18 Administrative Templates (Computer) | 6 | 186 | 3% |
 | 19 Administrative Templates (User) | 7 | 0 | 100% |
 
-### The 5 settings we should fix first:
+### The 5 Settings We Should Fix First
 
 1. **1.2 Account Lockout Policy.**
 2. **1.1 Password Policy.**
@@ -82,47 +82,50 @@ Run `Assessor-GUI.exe` as an administrator. When it opens up:
 
 ### Profiles
 
-1. Profile level 1 is normal scans for most corporate computers.
+1. Profile Level 1 is normal scans for most corporate computers.
 2. Level 2 is much stricter for high-security systems and can break things.
-3. The BitLocker -BL version just adds disk encryption on top of everything.
+3. The BitLocker (BL) version just adds disk encryption on top of everything.
 
 ---
 
-### Assessment Results
+## Assessment Results
 
-Account lockout duration: 
+#### Account Lockout Duration
 
-Now turn on the Failures Only then scroll to 1.2.1 and click to expand then click -> Show Assessment Evidence.
+Now turn on **Failures Only**, then scroll to 1.2.1 and click to expand, then click -> **Show Assessment Evidence**.
 
 <img width="882" height="332" alt="image" src="https://github.com/user-attachments/assets/40278795-6d6c-49cf-8900-3696761132fd" />
 
-See the actual value is 600s = 10minutes. CIS wants 15 or more. 
+See, the actual value is 600s = 10 minutes. CIS wants 15 or more.
 
-Password Policy:
+#### Password Policy
 
-Let's click 1.1.4 Minimum password length. Now same thing click on Show Assessment Evidence, CIS wants 14 or more for the password length but the VM is set to 0. The evidence also shows password complexity rule is not present and password history is 0. 
+Let's click 1.1.4 Minimum password length. Now same thing, click on **Show Assessment Evidence**. CIS wants 14 or more for the password length, but the VM is set to 0. The evidence also shows the password complexity rule is off and password history is 0.
 
 <img width="867" height="277" alt="image" src="https://github.com/user-attachments/assets/b61d3bb0-fb84-429e-9daf-17d44057fb49" />
 
-Include command line in process creation events. 
+#### Include Command Line in Process Creation Events
 
-Let's click on 18.9.3.1 and then click on the show evidence. There is a switch to turn it off and on for this but in our Windows 11 VM that switch does not exist. CIS wants it turned on.
+Let's click on 18.9.3.1 and then click on **Show Assessment Evidence**. There is a switch to turn it off and on for this, but in our Windows 11 VM that switch does not exist. CIS wants it turned on.
 
 <img width="885" height="432" alt="image" src="https://github.com/user-attachments/assets/fad280f2-824c-4117-8433-8abecb99b7e3" />
 
-See it says no matching system item found.
+See, it says no matching system items were found.
 
-Event Log Service
+#### Event Log Service
 
-Click on 18.10.26 Event Log Service and if that does not work click 18.10.26.2 Security. The title will say -> 18.10.26.2.2 Ensure 'Security: Specify the maximum log file size (KB)' is set to 'Enabled: 196,608 or greater' -> about 192 MB or more. The normal windows default size is about 20mb. To prove it let's use PowerShell.  
-```
+Click on 18.10.26 Event Log Service, and if that does not work, click 18.10.26.2 Security. The title will say -> 18.10.26.2.2 Ensure 'Security: Specify the maximum log file size (KB)' is set to 'Enabled: 196,608 or greater' -> about 192 MB or more. The normal Windows default size is about 20 MB. To prove it, let's use PowerShell.
+
+```powershell
 wevtutil gl Security
+```
 
-wevtutil = Windows Event Utility
-gl = get-log -> shows logs settings like it's max size.
+- `wevtutil` = Windows Event Utility
+- `gl` = get-log -> shows log settings, like its max size.
 
-Result:
+**Result:**
 
+```
 PS C:\WINDOWS\system32> wevtutil gl Security
 name: Security
 enabled: true
@@ -134,28 +137,29 @@ logging:
   logFileName: %SystemRoot%\System32\Winevt\Logs\Security.evtx
   retention: false
   autoBackup: false
-  maxSize: 20971520 -> See here!!!!!!!!!!!! : 20,971,520 bytes = 20 MB
+  maxSize: 20971520
 publishing:
   fileMax: 1
 PS C:\WINDOWS\system32>
-
 ```
+
+See `maxSize: 20971520` -> 20,971,520 bytes = 20 MB.
 
 <img width="950" height="260" alt="image" src="https://github.com/user-attachments/assets/b259214c-e656-485c-8a8d-a074d4c28dc2" />
 
+#### Firewall Public Profile
 
-Last one which is 9.3 Firewall Public Profile. Title: 9.3.8 Ensure 'Windows Firewall: Public: Logging: Log dropped packets' is set to 'Yes'. 
+Last one, which is 9.3 Firewall Public Profile. Title: 9.3.8 Ensure 'Windows Firewall: Public: Logging: Log dropped packets' is set to 'Yes'.
 
 <img width="936" height="285" alt="image" src="https://github.com/user-attachments/assets/b1ba81d1-2d2e-4bab-9c1d-a6fa00496ff4" />
 
-The settings is not configured so Windows is not logging dropped packets on the public profile. CIS wants it on. 
+The setting is not configured, so Windows is not logging dropped packets on the Public profile. CIS wants it on.
 
+**Public Profile** - It is the firewall mode on untrusted networks, like a small coffee shop Wi-Fi or the airport. CIS wants it logging dropped packets so you have a record of who tried to connect and got blocked.
 
-PUBLIC PROIFLE - It is the firewall mode on untrusted networks like a small coffee shop WI-FI or the airport. CIS wants it logging dropped packets so you have a record of who tried to connect and got blocked. 
+CIS is just a public nonprofit that publishes free security checks, built by agreement among experts from the gov, companies & schools. Nobody is legally bound by it, but most auditors use it. In DoD they usually use DISA STIG, which is the government version of the same idea.
 
-CIS is just a public nonprofit that publishes free security checks , built by agreement among experts from the gov , companies & schools. Nobody is legally bound by it but most auditors uses it. In DOD they usually use DISA STIG, which is government version of the same idea.
-
-CONCLUTION TABLE:
+---
 
 ## Findings
 
@@ -168,7 +172,6 @@ CONCLUTION TABLE:
 | 18.9.3.1 | Include command line in process creation events | Enabled | Not configured |
 | 18.10.26.2.2 | Security log maximum size | 196,608 KB (about 192 MB) or more | 20 MB (20,971,520 bytes, Windows default) |
 | 9.3.8 | Public profile: log dropped packets | Yes | Not configured |
-
 
 
 
