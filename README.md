@@ -38,7 +38,7 @@ Hands-on labs I've worked through, with findings, fixes, and evidence.
 
 1\. [Internal Asset Discovery](Pentesting/Reconnaissance_&_Asset_Discovery/Internal_asset_discovery.md) - Full Nmap port scan against a Windows 11 VM, confirmed 3 open ports (135, 139, 445), pulled the hostname and OS build with Netexec, and documented the asset inventory baseline.
 
-2\. [Service Fingerprinting](Pentesting/Reconnaissance_&_Asset_Discovery/Service_Fingerprinting.md) - Enabled RDP and WinRM on the Windows 11 VM, then I ran Nmap NSE scripts against both services, enumerated SMB shares and password policy with Netexec, and documented all the findings including a patched CVE (CVE-2025-21293). CVE also stands for Common Vulnerabilities and Exposures. 
+2\. [Service Fingerprinting](Pentesting/Reconnaissance_&_Asset_Discovery/Service_fingerprinting.md) - Enabled RDP and WinRM on the Windows 11 VM, then I ran Nmap NSE scripts against both services, enumerated SMB shares and password policy with Netexec, and documented all the findings including a patched CVE (CVE-2025-21293). CVE also stands for Common Vulnerabilities and Exposures. 
 
 
 ## Quick Fixes
