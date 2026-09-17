@@ -6,9 +6,9 @@
 
 ### Network Discovery
 - [ ] Get a network diagram if one exists. If not, you are making one. I already made a lab on it please view that in the quick labs if needed.
-- [ ] Run a ping sweep across every subnet to find live hosts.
+- [ ] Run a ping sweep across every subnet to find live hosts. (Run ```ip a``` on the machine which I am guessing will be kali, then look for whichever adapter is connected to the internet, wlan0 or eth0 or whatever, The IP next to it is your address and the /24 tells you the subnet to scan.)... Let's do say you see your IP as 192.168.56.103/24. That 103 is your machines address not the subnet. The SUBNET will be  192.168.56.0/24, 0 means the whole range. So the command would be like nmap -sn 192.168.56.0/24. Now we are scanning everything on the SUBNET. 
 ```bash
-nmap -sn 192.168.1.0/24
+nmap -sn 192.168.56.0/24
 ```
 - [ ] Run a full port scan against every live host and save the output.
 ```bash
