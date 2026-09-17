@@ -5,7 +5,7 @@
 ## Phase 1: Know What Exists (Week 1)
 
 ### Network Discovery
-- [ ] Get a network diagram if one exists. If not, you are making one.
+- [ ] Get a network diagram if one exists. If not, you are making one. I already made a lab on it please view that in the quick labs if needed.
 - [ ] Run a ping sweep across every subnet to find live hosts.
 ```bash
 nmap -sn 192.168.1.0/24
