@@ -61,3 +61,6 @@ Hands-on labs I've worked through, with findings, fixes, and evidence.
 1\. [Firewall Commands](Cheat_Sheet/FireWall.md) - Basic Firewall Commands.
 
 2\. [Sysmon Commands](Cheat_Sheet/Sysmon_Commands.md) - Basic Sysmon Commands.
+
+## Day Task
+1\. [Day 1 Task](TaskList/Day1_Task.md) -  Day 1 Task
