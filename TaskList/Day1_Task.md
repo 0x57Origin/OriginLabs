@@ -156,7 +156,7 @@ Get-HotFix -Id KB5065426
 
 ---
 
-## Priority Order (If You Can Only Do One Thing at a Time)
+## Priority Order 
 
 1. Asset inventory - you can't protect what you don't know exists.
 2. Vulnerability scan - find the worst problems first.
