@@ -1,13 +1,31 @@
-# Windows Logging & Event Detection
+# Windows Logging and Event Detection
+
+**Lab:** Enabling Windows 11 audit policy and detecting process creation events (Event ID 4688)
+**Control mapping:** NIST SP 800-171, 3.3.1 (Create and retain system audit logs and records)
+
 ---
-## Enabling Windows 11 audit policy and detecting process creation events (Event ID 4688) - NIST 800-171: 3.3.1
+
+## Objective
+
+Verify whether Windows is logging process creation, enable the audit subcategory if it is disabled, and confirm that a newly launched process generates a Security log entry (Event ID 4688).
+
+**Environment:** Windows 11, local workstation, PowerShell running as Administrator.
+
 ---
-### We need to check if the audit logging is even on first! (audit policy)
--> Open PowerShell @admin and type: auditpol /get /category:*
-    /get /category:* -> This just dumps all the audit policy to the terminal
+
+## Step 1: Check the current audit policy
+
+Before changing anything, confirm what is being audited. Open PowerShell as Administrator and run:
+
+```powershell
+auditpol /get /category:*
+```
+
+`/get /category:*` dumps every audit category and subcategory to the terminal.
+
+**Output:**
 
 ```
-PS C:\WINDOWS\system32> auditpol /get /category:*
 System audit policy
 Category/Subcategory                      Setting
 System
@@ -79,38 +97,67 @@ Account Logon
   Other Account Logon Events              No Auditing
   Kerberos Authentication Service         No Auditing
   Credential Validation                   No Auditing
-PS C:\WINDOWS\system32>
 ```
+
+### Finding
+
+Under **Detailed Tracking**, `Process Creation` is set to **No Auditing**.
+
+That means Windows is not recording when a new program launches. Without it, a process can execute on this host and leave no record in the Security log, which removes one of the most useful sources of evidence for detection and incident response. This should be enabled.
+
 ---
-What jumps off right away is the Detailed Audit -> Process Creation: No Auditing. So right now windows is not logging when a new process meaning program launches. Something attackers loveeee. Any malware can run on this windows and nobody would know. Turn this on asap.
 
-Now we will turn on the Process Creation on and then launch a program and see if it logs or not.
+## Step 2: Enable process creation auditing
 
-Okay in admin shell we have to type this: auditpol /set /subcategory:"Process Creation" /success:enable
+In the Administrator shell:
 
-<img width="1915" height="137" alt="image" src="https://github.com/user-attachments/assets/5dbafc68-1a22-4864-8594-7769bb46b108" />
-
-After that we will dump the audit policy again and see if it's there now using -> auditpol /get /category:*
-
-<img width="1917" height="242" alt="image" src="https://github.com/user-attachments/assets/1afe6f50-3aa8-4d87-9f1e-5d39a4130e03" />
-
-Or we could do straight process creation dump -> auditpol /get /subcategory:"Process Creation"
+```powershell
+auditpol /set /subcategory:"Process Creation" /success:enable
 ```
-PS C:\WINDOWS\system32> auditpol /get /subcategory:"Process Creation"
+
+<img width="1915" height="137" alt="Enabling the Process Creation audit subcategory" src="https://github.com/user-attachments/assets/5dbafc68-1a22-4864-8594-7769bb46b108" />
+
+---
+
+## Step 3: Verify the change
+
+Dump the full policy again:
+
+```powershell
+auditpol /get /category:*
+```
+
+<img width="1917" height="242" alt="Audit policy after enabling Process Creation" src="https://github.com/user-attachments/assets/1afe6f50-3aa8-4d87-9f1e-5d39a4130e03" />
+
+Or query just the one subcategory:
+
+```powershell
+auditpol /get /subcategory:"Process Creation"
+```
+
+**Output:**
+
+```
 System audit policy
 Category/Subcategory                      Setting
 Detailed Tracking
   Process Creation                        Success
-PS C:\WINDOWS\system32>
 ```
-Success
+
+The setting is now **Success**.
 
 ---
-# Launch Notepad 
+
+## Step 4: Generate and locate an event
+
+Launch Notepad to create a process, then pull the five most recent 4688 events from the Security log:
+
+```powershell
+Get-WinEvent -FilterHashtable @{LogName='Security'; ID=4688} -MaxEvents 5 |
+    Format-List TimeCreated, Message
 ```
-Shell -> Notepad -> It will get logged as event ID 4688. Now let's find it in the log. Pull the most recent 4688 events:
-Shell -> Get-WinEvent -FilterHashtable @{LogName='Security'; ID=4688} -MaxEvents 5 | Format-List TimeCreated, Message
-```
+
+**Output (most recent event):**
 
 ```
 TimeCreated : 9/11/2026 8:39:13 PM
@@ -130,30 +177,47 @@ Message     : A new process has been created.
 
               Process Information:
                 New Process ID:         0x18cc
-                New Process Name:       C:\Program
-              Files\WindowsApps\Microsoft.WindowsNotepad_11.2607.14.0_x64__8wekyb3d8bbwe\Notepad\Notepad.exe
+                New Process Name:       C:\Program Files\WindowsApps\Microsoft.WindowsNotepad_11.2607.14.0_x64__8wekyb3d8bbwe\Notepad\Notepad.exe
                 Token Elevation Type:   TokenElevationTypeFull (2)
-                Mandatory Label:                S-1-16-12288
+                Mandatory Label:        S-1-16-12288
                 Creator Process ID:     0x11ec
-                Creator Process Name:   C:\Program
-              Files\WindowsApps\Microsoft.WindowsNotepad_11.2607.14.0_x64__8wekyb3d8bbwe\Notepad\Notepad.exe
+                Creator Process Name:   C:\Program Files\WindowsApps\Microsoft.WindowsNotepad_11.2607.14.0_x64__8wekyb3d8bbwe\Notepad\Notepad.exe
                 Process Command Line:
-
-              Token Elevation Type indicates the type of token that was assigned to the new process in accordance with
-              User Account Control policy.
-
-              Type 1 is a full token with no privileges removed or groups disabled.  A full token is only used if User
-              Account Control is disabled or if the user is the built-in Administrator account or a service account.
-
-              Type 2 is an elevated token with no privileges removed or groups disabled.  An elevated token is used
-              when User Account Control is enabled and the user chooses to start the program using Run as
-              administrator.  An elevated token is also used when an application is configured to always require
-              administrative privilege or to always require maximum privilege, and the user is a member of the
-              Administrators group.
-
-              Type 3 is a limited token with administrative privileges removed and administrative groups disabled.
-              The limited token is used when User Account Control is enabled, the application does not require
-              administrative privilege, and the user does not choose to start the program using Run as administrator.
 ```
 
-There it is !!! Also if you want to revert -> To revert: auditpol /set /subcategory:"Process Creation" /success:disable
+The event was captured. The launch of Notepad is now recorded with the account that started it, the full image path, the new process ID, and the parent (creator) process ID.
+
+---
+
+## Notes
+
+**Token Elevation Type** describes the token assigned to the new process under User Account Control:
+
+| Type | Meaning |
+| --- | --- |
+| Type 1 | Full token, no privileges removed or groups disabled. Used only when UAC is disabled, or for the built in Administrator or a service account. |
+| Type 2 | Elevated token. Used when UAC is enabled and the program was started with "Run as administrator", or the application always requires elevation and the user is in the Administrators group. |
+| Type 3 | Limited token, administrative privileges removed and administrative groups disabled. Used when UAC is enabled and the application does not require elevation. |
+
+**Process Command Line is empty.** Enabling the audit subcategory alone does not record arguments. Command line capture is a separate setting (`Include command line in process creation events`, under Computer Configuration > Administrative Templates > System > Audit Process Creation). Without it, an event shows that `powershell.exe` ran but not what it ran, which is the detail that usually matters in detection work.
+
+**Creator process.** In this capture the creator process is also Notepad, which is expected for modern packaged apps that relaunch themselves rather than staying as a child of the shell.
+
+---
+
+## Revert
+
+To return the host to its original state:
+
+```powershell
+auditpol /set /subcategory:"Process Creation" /success:disable
+```
+
+---
+
+## Takeaways
+
+- Audit policy defaults are not sufficient for detection. Process creation was off out of the box.
+- Event ID 4688 gives account, image path, process ID, and parent process ID, which is the base data for process lineage analysis.
+- Enabling the subcategory is only half the job. Turn on command line logging as well, or the events will be far less useful.
+- This maps to NIST SP 800-171 3.3.1, which requires audit records to be created and retained to support monitoring, analysis, investigation, and reporting.
