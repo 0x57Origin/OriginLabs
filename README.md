@@ -1,3 +1,9 @@
+---
+title: Home
+layout: default
+nav_order: 1
+---
+
 # OriginLabs 
 
 Hands-on labs I've worked through, with findings, fixes, and evidence.
