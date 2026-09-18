@@ -1,5 +1,7 @@
 title: OriginLabs
 description: Hands-on cybersecurity labs, with findings, fixes, and evidence.
+url: https://0x57origin.github.io
+baseurl: "/OriginLabs"
 
 remote_theme: just-the-docs/just-the-docs@v0.10.1
 plugins:
