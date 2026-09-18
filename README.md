@@ -56,6 +56,8 @@ Hands-on labs I've worked through, with findings, fixes, and evidence.
 
 1\. [Is Windows SSH Exposed](QuickLabs/Windows_SSH_Exposed.md) - Simple checks to gather information about the Windows SSH: Exposed or Not Exposed.
 
+2\. [Simple_Network_Diagram](QuickLabs/MakeNetworkDiagram.md) - Simple network diagram developed with Nmap scans.
+
 ## Cheat Sheet
 
 1\. [Firewall Commands](Cheat_Sheet/FireWall.md) - Basic Firewall Commands.
