@@ -1,38 +1,52 @@
-# Sysmon Deployment - Looking at the Deep Windows Process & Network Visibility for Threat Data Gathering (NIST 800-171: 3.3.1)
+# Sysmon Deployment
+
+**Deep Windows process and network visibility for threat data gathering (NIST 800-171: 3.3.1)**
 
 ---
 
-My Windows VM already gathers baseline process creation, so we do not need to mess with audit policy. So we can just go ahead and download Sysmon (System Monitor). We can download it straight from PowerShell into a folder from Windows Sysinternals.
+## 1. Download Sysmon
 
-PowerShell:
+My Windows VM already gathers baseline process creation, so we do not need to mess with audit policy. We can go straight to downloading Sysmon (System Monitor) from Windows Sysinternals, right out of PowerShell.
 
 ```powershell
 Invoke-WebRequest -Uri "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "Sysmon.zip"
 Expand-Archive Sysmon.zip -DestinationPath Sysmon
 ```
 
--Uri - Uniform Resource Locator. Also, if you ever want to change directory and the username has a space in it, like -> Random User -> you can use -> cd "Location" and it will not cause any error issues in PowerShell.
+**Breaking it down:**
 
-Expand-Archive - Unzips a zip file.
-Sysmon.zip - The source zip file.
--DestinationPath - The folder to dump all those Sysmon.zip items or files, and if the Sysmon folder doesn't exist it will create one.
+| Piece | What it does |
+|---|---|
+| `Uri` | Uniform Resource Identifier, the address we are pulling from |
+| `Expand-Archive` | Unzips a zip file |
+| `Sysmon.zip` | The source zip file |
+| `-DestinationPath` | The folder to dump all the Sysmon files into. If the folder does not exist, it gets created |
+
+> **Tip:** If the username on the machine has a space in it, like `Random User`, `cd` can throw an error in PowerShell. The fix is to wrap the path in quotes: `cd "C:\Users\Random User\Desktop"`. Just use `""` and it fixes itself.
 
 ---
 
-Also, Sysmon is a CLI program. Open PowerShell and CD into the Sysmon folder and run it there -> .\Sysmon64.exe. Bare Sysmon itself logs nothing useful at all. But we can install a config file to watch for what we want.
+## 2. Install the Config
 
-## Install Config
+Sysmon is a CLI program. Open PowerShell, `cd` into the Sysmon folder, and run `.\Sysmon64.exe`.
 
-We can just install it in the same folder using the eula file. Now, what is eula? End User License Agreement, the legal terms you accept to use the software. Let's download that xml file now.
+Bare Sysmon logs nothing useful on its own. We install a config file so it watches for what we actually want.
+
+Download the config XML into the same folder:
 
 ```powershell
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/SwiftOnSecurity/sysmon-config/master/sysmonconfig-export.xml" -OutFile "SysmonConfig.xml"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/SwiftOnSecurity/sysmon-config/master/sysmonconfig-export.xml" -OutFile "sysmonconfig.xml"
 ```
 
-```
+Now load it. The `-accepteula` flag accepts the EULA (End User License Agreement, the legal terms you accept to use the software) so it does not stop and prompt you:
+
+```powershell
 .\Sysmon64.exe -accepteula -i sysmonconfig.xml
+```
 
+**Output:**
 
+```text
 Loading configuration file with schema version 4.50
 Sysmon schema version: 4.91
 Configuration file validated.
@@ -44,14 +58,19 @@ Starting Sysmon64..
 Sysmon64 started.
 ```
 
-Sysmon now logs every process that starts and every connection made, writing each as an event we can search for. Now confirm events are landing. Open Event Viewer in the Sysmon log:
+Sysmon now logs every process that starts and every connection made, writing each one as an event we can search for.
 
-```
+---
+
+## 3. Confirm Events Are Landing
+
+```powershell
 Get-WinEvent -LogName "Microsoft-Windows-Sysmon/Operational" -MaxEvents 5
+```
 
-PS C:\Users\Someone Unknown\Desktop\Sysmon\Sysmon> Get-WinEvent -LogName "Microsoft-Windows-Sysmon/Operational" -MaxEvents 5
+**Output:**
 
-
+```text
    ProviderName: Microsoft-Windows-Sysmon
 
 TimeCreated                      Id LevelDisplayName Message
@@ -60,48 +79,73 @@ TimeCreated                      Id LevelDisplayName Message
 9/14/2026 1:31:15 AM              1 Information      Process Create:...
 9/14/2026 1:31:15 AM              4 Information      Sysmon service state changed:...
 9/14/2026 1:31:14 AM             16 Information      Sysmon config state changed:...
-
-
-PS C:\Users\Someone Unknown\Desktop\Sysmon\Sysmon>
 ```
 
-Well, now let's open an ID and read the log. Let's go with ID 1 to see what process was created.
+---
 
-```
+## 4. Read a Process Create Event
+
+Let's open an Event ID 1 and read it to see what process was created.
+
+```powershell
 Get-WinEvent -LogName "Microsoft-Windows-Sysmon/Operational" -MaxEvents 1 -FilterXPath "*[System[EventID=1]]" | Format-List
 ```
 
--FilterXPath grabs only EventID 1; Format-List prints the full message instead of a cramped table.
+`-FilterXPath` grabs only EventID 1. `Format-List` prints the full message instead of a cramped table.
 
-Well, we got a lot of information on the screen, but let's look at the Image value. Image: C:\Windows\System32\wbem\unsecapp.exe.
+We get a lot of information on the screen, but let's start with the `Image` value:
 
-It is a normal Microsoft Windows WMI -> Windows Management Instrumentation. What is it? It is a built-in infrastructure in Windows operating systems that allows administrators and developers to manage system data, configurations, and operations both locally and remotely. Well, for our investigation the Image is showing us the path to it. There are 2 more key:value pairs to look at.
+```text
+Image: C:\Windows\System32\wbem\unsecapp.exe
+```
 
-1. CommandLine - How it was launched. (args matter for spotting attacks) ... args - Arguments. The extra text passed to a program when it runs. CommandLine: C:\WINDOWS\system32\wbem\unsecapp.exe -Embedding -> This is where the suspicious stuff would appear. This is the field where you can see if any process is encoded or obscured, or even downloading something.
-2. ParentImage - What launched it. ParentImage: C:\Windows\System32\svchost.exe -> Now we can see what launched it. Heart of the parent/child relationship; attacks show up as weird chains. Example -> winword.exe -> powershell.exe. Word should not spawn a shell, that is a malicious macro. Here, svchost -> unsecapp is normal Windows behavior. A macro is a small script embedded inside of a Microsoft Office file. Attackers abuse this all the time.
+That is a normal Microsoft Windows WMI binary. WMI (Windows Management Instrumentation) is built-in infrastructure in Windows that lets administrators and developers manage system data, configurations, and operations both locally and remotely. For our investigation, `Image` is showing us the path to it.
+
+There are two more key/value pairs worth looking at.
+
+### CommandLine: how it was launched
+
+```text
+CommandLine: C:\WINDOWS\system32\wbem\unsecapp.exe -Embedding
+```
+
+Args (arguments) are the extra text passed to a program when it runs, and args matter for spotting attacks. This is where the suspicious stuff shows up. It is the field where you can see if a process is encoded, obscured, or downloading something.
+
+### ParentImage: what launched it
+
+```text
+ParentImage: C:\Windows\System32\svchost.exe
+```
+
+This is the heart of the parent/child relationship, and attacks show up as weird chains.
+
+Example: `winword.exe -> powershell.exe`. Word should not spawn a shell, so that is a malicious macro. A macro is a small script embedded inside a Microsoft Office file, and attackers abuse this all the time.
+
+Here, `svchost.exe -> unsecapp.exe` is normal Windows behavior.
 
 ---
 
-# Purple Scenario: Red Generates It, Blue Hunts It
+## 5. Purple Scenario: Red Generates It, Blue Hunts It
 
-Scenario: Let's create an encoded PowerShell command, then find it in the Sysmon log by its CommandLine.
+**Scenario:** create an encoded PowerShell command, then find it in the Sysmon log by its `CommandLine`.
 
-```
+```powershell
 powershell -enc VwByAGkAdABlAC0ASABvAHMAdAAgAGgAaQA=
 ```
 
-That is base64. Base64 turns files or images into text so they can be easily sent over the internet. Now, base64 can be used to write any data with 64 text characters. So a whole command becomes a safe-looking string. -enc is just to hide what PowerShell is running.
+That is Base64. Base64 turns files or images into text so they can be sent easily over the internet, and it can write any data using 64 text characters. So a whole command becomes a safe-looking string. `-enc` is just there to hide what PowerShell is running.
 
-> Note: This is a safe detection test. The payload decodes to a harmless `Write-Host hi`.
+> **Note:** This is a safe detection test. The payload decodes to a harmless `Write-Host hi`.
 
----
+### Find it in Sysmon
 
-Let's find it in our Sysmon.
-
+```powershell
+Get-WinEvent -LogName "Microsoft-Windows-Sysmon/Operational" -MaxEvents 5
 ```
-PS C:\Users\Someone Unknown\Desktop\Sysmon\Sysmon> Get-WinEvent -LogName "Microsoft-Windows-Sysmon/Operational" -MaxEvents 5
 
+**Output:**
 
+```text
    ProviderName: Microsoft-Windows-Sysmon
 
 TimeCreated                      Id LevelDisplayName Message
@@ -111,46 +155,55 @@ TimeCreated                      Id LevelDisplayName Message
 9/14/2026 1:51:47 AM              1 Information      Process Create:...
 9/14/2026 1:46:21 AM              3 Information      Network connection detected:...
 9/14/2026 1:35:35 AM             22 Information      Dns query:...
-
-
-PS C:\Users\Someone Unknown\Desktop\Sysmon\Sysmon>
 ```
 
-Let's check out ID 1 and I see that -> CommandLine: "C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe" -enc VwByAGkAdABlAC0ASABvAHMAdAAgAGgAaQA=
+Checking ID 1, I see:
 
-Now let's decode using PowerShell:
-
+```text
+CommandLine: "C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe" -enc VwByAGkAdABlAC0ASABvAHMAdAAgAGgAaQA=
 ```
+
+### Decode it
+
+```powershell
 [System.Text.Encoding]::Unicode.GetString([Convert]::FromBase64String("VwByAGkAdABlAC0ASABvAHMAdAAgAGgAaQA="))
 ```
 
-What is Unicode? Unicode is a giant list that gives every letter, number, and symbol its own code, so computers everywhere show text the same way.
+Unicode is a giant list that gives every letter, number, and symbol its own code, so computers everywhere show text the same way.
 
-Results:
+**Output:**
 
-```
-PS C:\Users\Someone Unknown\Desktop\Sysmon\Sysmon> [System.Text.Encoding]::Unicode.GetString([Convert]::FromBase64String("VwByAGkAdABlAC0ASABvAHMAdAAgAGgAaQA="))
+```text
 Write-Host hi
-PS C:\Users\Someone Unknown\Desktop\Sysmon\Sysmon>
 ```
 
-## Filter It Better
+---
 
-```
+## 6. Filter It Better
+
+Instead of going through events one by one, filter straight for the encoded ones:
+
+```powershell
 Get-WinEvent -LogName "Microsoft-Windows-Sysmon/Operational" -FilterXPath "*[System[EventID=1]]" -MaxEvents 10 | Where-Object { $_.Message -like "*-enc*" } | Format-List
 ```
 
-Now this is what will just straight up show what is encoded, rather than us going one by one.
+**Breaking it down:**
 
-Where-Object = a filter. Keeps only items that pass a test.
-{ } = the test goes inside these braces.
-$_ = "the current item" being checked (one event).
-.Message = the field on that event you want to look at.
--like = compare with wildcard matching.
-"*-enc*" = the pattern. * means "anything," so this matches any message containing -enc anywhere.
+| Piece | What it does |
+|---|---|
+| `Where-Object` | A filter. Keeps only items that pass a test |
+| `{ }` | The test goes inside these braces |
+| `$_` | "The current item" being checked (one event) |
+| `.Message` | The field on that event you want to look at |
+| `-like` | Compare with wildcard matching |
+| `"*-enc*"` | The pattern. `*` means "anything," so this matches any message containing `-enc` anywhere |
 
-Basically, Where-Object is running a test to see if the item has that key:value pair.
+Basically, `Where-Object` is running a test to see if the item has that key/value pair.
 
-# Conclusion
+---
 
-So far we covered how to download the Sysmon CLI from Sysinternals, then unzip it in a folder. Then we ran Sysmon and studied the processes. Then we made a fake encoded string in PowerShell, and the Sysmon CLI caught it, and we were able to read it. This scenario satisfies NIST 800-171 3.3.1 by creating and retaining detailed process and network audit records at the system level.
+## Conclusion
+
+We covered how to download the Sysmon CLI from Sysinternals and unzip it into a folder, then install it with a config so it actually logs something useful. We confirmed events were landing, then read a process create event field by field (`Image`, `CommandLine`, `ParentImage`). Finally, we generated a fake encoded PowerShell string, Sysmon caught it, and we decoded it to prove intent.
+
+This scenario satisfies **NIST 800-171 3.3.1** by creating and retaining detailed process and network audit records at the system level.
