@@ -1,37 +1,63 @@
+theme: jekyll-theme-chirpy
+
+lang: en
+timezone: America/Denver
+
 title: OriginLabs
-description: Hands-on cybersecurity labs, with findings, fixes, and evidence.
-url: https://0x57origin.github.io
+tagline: Hands-on cybersecurity labs, with findings, fixes, and evidence.
+description: >-
+  Lab writeups covering detection engineering, Windows logging, network
+  enumeration, and remediation. All testing runs in isolated environments I own.
+
+url: "https://0x57origin.github.io"
 baseurl: "/OriginLabs"
 
-remote_theme: mmistakes/minimal-mistakes@4.26.2
-minimal_mistakes_skin: dark
+github:
+  username: 0x57Origin
 
-plugins:
-  - jekyll-remote-theme
-  - jekyll-include-cache
-  - jekyll-seo-tag
-  - jekyll-sitemap
-
-author:
-  name: "Mohammad Nazmul"
-  bio: "Cybersecurity labs, findings, and fixes."
+social:
+  name: Mohammad Nazmul
+  email: mohammadnazmuldev@gmail.com
   links:
-    - label: "GitHub"
-      icon: "fab fa-fw fa-github"
-      url: "https://github.com/0x57Origin"
-    - label: "LinkedIn"
-      icon: "fab fa-fw fa-linkedin"
-      url: "https://www.linkedin.com/in/mohammad-nazmul-82012127b/"
+    - https://github.com/0x57Origin
+    - https://www.linkedin.com/in/mohammad-nazmul-82012127b/
+
+theme_mode: dark
+avatar: ""
+
+toc: true
+
+comments:
+  provider: giscus
+  giscus:
+    repo: 0x57Origin/OriginLabs
+    repo_id: ""
+    category: Announcements
+    category_id: ""
+    mapping: pathname
+    strict: "0"
+    input_position: bottom
+    lazy: "true"
+
+paginate: 10
 
 defaults:
   - scope:
       path: ""
+      type: posts
     values:
-      layout: single
-      author_profile: true
+      layout: post
+      comments: true
+      toc: true
+      permalink: /posts/:title/
 
 exclude:
+  - "*.gem"
+  - "*.gemspec"
   - Gemfile
   - Gemfile.lock
-  - vendor/
-  - venv/
+  - vendor
+  - venv
+  - node_modules
+  - tools
+  - "*.md"
