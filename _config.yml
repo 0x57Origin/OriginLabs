@@ -1,8 +1,16 @@
 title: OriginLabs
 description: Hands-on cybersecurity labs, with findings, fixes, and evidence.
-remote_theme: just-the-docs/just-the-docs
+
+remote_theme: just-the-docs/just-the-docs@v0.10.1
+plugins:
+  - jekyll-remote-theme
+  - jekyll-seo-tag
+  - jekyll-sitemap
 
 color_scheme: dark
+heading_anchors: true
+back_to_top: true
+back_to_top_text: "Back to top"
 
 search_enabled: true
 search:
@@ -12,18 +20,15 @@ search:
   preview_words_after: 10
   button: false
 
-heading_anchors: true
-back_to_top: true
-back_to_top_text: "Back to top"
-
 aux_links:
   GitHub: https://github.com/0x57Origin
   LinkedIn: https://www.linkedin.com/in/mohammad-nazmul-82012127b/
 aux_links_new_tab: true
 
-footer_content: "OriginLabs. Labs run in isolated environments I own."
+nav_sort: case_insensitive
 last_edit_timestamp: true
 last_edit_time_format: "%b %e %Y"
+footer_content: "OriginLabs. Labs run in isolated environments I own."
 
 callouts:
   warning:
@@ -32,3 +37,10 @@ callouts:
   note:
     title: Note
     color: blue
+
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - vendor/
+  - venv/
