@@ -1,63 +1,47 @@
-theme: jekyll-theme-chirpy
-
-lang: en
-timezone: America/Denver
-
 title: OriginLabs
-tagline: Hands-on cybersecurity labs, with findings, fixes, and evidence.
-description: >-
-  Lab writeups covering detection engineering, Windows logging, network
-  enumeration, and remediation. All testing runs in isolated environments I own.
-
-url: "https://0x57origin.github.io"
+description: Hands-on cybersecurity labs, with findings, fixes, and evidence.
+url: https://0x57origin.github.io
 baseurl: "/OriginLabs"
 
-github:
-  username: 0x57Origin
+remote_theme: just-the-docs/just-the-docs@v0.10.1
+plugins:
+  - jekyll-remote-theme
+  - jekyll-seo-tag
+  - jekyll-sitemap
 
-social:
-  name: Mohammad Nazmul
-  email: mohammadnazmuldev@gmail.com
-  links:
-    - https://github.com/0x57Origin
-    - https://www.linkedin.com/in/mohammad-nazmul-82012127b/
+color_scheme: dark
+heading_anchors: true
+back_to_top: true
+back_to_top_text: "Back to top"
 
-theme_mode: dark
-avatar: ""
+search_enabled: true
+search:
+  heading_level: 2
+  previews: 3
+  preview_words_before: 5
+  preview_words_after: 10
+  button: false
 
-toc: true
+aux_links:
+  GitHub: https://github.com/0x57Origin
+  LinkedIn: https://www.linkedin.com/in/mohammad-nazmul-82012127b/
+aux_links_new_tab: true
 
-comments:
-  provider: giscus
-  giscus:
-    repo: 0x57Origin/OriginLabs
-    repo_id: ""
-    category: Announcements
-    category_id: ""
-    mapping: pathname
-    strict: "0"
-    input_position: bottom
-    lazy: "true"
+nav_sort: case_insensitive
+last_edit_timestamp: true
+last_edit_time_format: "%b %e %Y"
+footer_content: "OriginLabs. Labs run in isolated environments I own."
 
-paginate: 10
-
-defaults:
-  - scope:
-      path: ""
-      type: posts
-    values:
-      layout: post
-      comments: true
-      toc: true
-      permalink: /posts/:title/
+callouts:
+  warning:
+    title: Warning
+    color: red
+  note:
+    title: Note
+    color: blue
 
 exclude:
-  - "*.gem"
-  - "*.gemspec"
   - Gemfile
   - Gemfile.lock
-  - vendor
-  - venv
-  - node_modules
-  - tools
-  - "*.md"
+  - vendor/
+  - venv/
