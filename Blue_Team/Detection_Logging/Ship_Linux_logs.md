@@ -29,5 +29,22 @@ sudo systemctl status auditd
 ## Results
 
 ```
+● auditd.service - Security Audit Logging Service
+     Loaded: loaded (/usr/lib/systemd/system/auditd.service; enabled; preset: disabled)
+     Active: active (running) since Sat 2026-09-19 05:55:28 EDT; 8min ago
+ Invocation: 27716a94743f4dc881b1d9201dfaaa97
+       Docs: man:auditd(8)
+             https://github.com/linux-audit/audit-documentation
+    Process: 534143 ExecStart=/usr/sbin/auditd (code=exited, status=0/SUCCESS)
+   Main PID: 534152 (auditd)
+      Tasks: 2 (limit: 4560)
+     Memory: 640K (peak: 2.2M)
+        CPU: 23ms
+     CGroup: /system.slice/auditd.service
+             └─534152 /usr/sbin/auditd
 
+Sep 19 05:55:28 kali systemd[1]: Starting auditd.service - Security Audit Logging Service...
+Sep 19 05:55:28 kali auditd[534152]: No plugins found, not dispatching events
+Sep 19 05:55:28 kali auditd[534152]: Init complete, auditd 4.1.2 listening for events (startup state enable)
+Sep 19 05:55:28 kali systemd[1]: Started auditd.service - Security Audit Logging Service.
 ```
