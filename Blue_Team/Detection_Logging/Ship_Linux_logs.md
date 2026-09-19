@@ -48,3 +48,18 @@ Sep 19 05:55:28 kali auditd[534152]: No plugins found, not dispatching events
 Sep 19 05:55:28 kali auditd[534152]: Init complete, auditd 4.1.2 listening for events (startup state enable)
 Sep 19 05:55:28 kali systemd[1]: Started auditd.service - Security Audit Logging Service.
 ```
+
+---
+
+Now the audit daemon is running, but it is not watching anything yet. We must give it a rule to work with. Same idea as the Windows lab. For this lab I want a `syscall` (system call) rule that will catch command execution in the terminal.
+
+Syscall = when a program wants the kernel to do something it just cannot do on its own, it has to ask the kernel. That request itself is the syscall.
+
+execve = execute. It is the system call that launches a new program, replacing the current process with the one we are running. Basically, if I have to simplify it really fast, it is this: every time you run a command in the terminal, execve is the syscall that actually starts it. That is why we will be watching execve, it will catch all the command execution.
+
+---
+
+
+
+
+
