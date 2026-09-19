@@ -17,6 +17,8 @@ Hands-on labs I've worked through, with findings, fixes, and evidence.
 
 2\. [Windows Audit Logging](Blue_Team/Detection_Logging/Windows_Audit_Logging.md) - Enabled Windows 11 process creation auditing, launched a process, and pulled the Event ID 4688 record that proves it was logged (Notepad).
 
+3\. [Linux Audit Logging](Blue_Team/Detection_Logging/Ship_Linux_logs.md) - Turned on auditd, wrote an execve rule, ran a command, and pulled the exact record that proves it was logged, showing what ran, from where, and who ran it even as root. The Linux version of the Windows 4688 lab.
+
 ### Hardening & Baselines
 
 1\. [SSH Hardening](Blue_Team/Hardening_Baselines/Ssh_Hardening.md) - Turned off root SSH login and added a fail2ban lockout in a Docker container, then proved it with logs and config checks.
