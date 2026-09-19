@@ -19,6 +19,8 @@ Hands-on labs I've worked through, with findings, fixes, and evidence.
 
 3\. [Linux Audit Logging](Blue_Team/Detection_Logging/Ship_Linux_logs.md) - Turned on auditd, wrote an execve rule, ran a command, and pulled the exact record that proves it was logged, showing what ran, from where, and who ran it even as root. The Linux version of the Windows 4688 lab.
 
+4\. [Log Coverage Review](Blue_Team/Detection_Logging/Log_Coverage_Review.md) - A paper review of my current logging against six MITRE ATT&CK techniques. Marked each as catch, partial, or miss, then documented what to turn on to close each gap and what it costs in log volume.
+
 ### Hardening & Baselines
 
 1\. [SSH Hardening](Blue_Team/Hardening_Baselines/Ssh_Hardening.md) - Turned off root SSH login and added a fail2ban lockout in a Docker container, then proved it with logs and config checks.
