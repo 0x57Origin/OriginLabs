@@ -27,6 +27,9 @@ Hands-on labs I've worked through, with findings, fixes, and evidence.
 
 1\. [Windows Firewall Blocking](Blue_Team/Response_Containment/Windows_Firewall_Blocking.md) - Blocked an outbound connection with a Windows Firewall rule and confirmed the traffic is stopped. Source: Firewall Logging & Sysmon Event ID 3.
 
+### Vulnerability Management
+1\. [Authenticated Scan via Nessus](Blue_Team/Vulnerability_management/Authenticated_Scan_Nessus.md) - Ran a credentialed Nessus scan against a Windows 11 VM, then I prepared the host to accept credentials, and pulled two CISA KEV Defender findings with version evidence.
+
 ## Vulnerability Research
 
 ### Stack Overflow Exploitation Research
