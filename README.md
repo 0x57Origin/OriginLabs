@@ -55,6 +55,8 @@ Hands-on labs I've worked through, with findings, fixes, and evidence.
 
 1\. [No Internet on Windows 11 VM](QuickFixes/No_Internet_VirtualBox.md) - VirtualBox VM had no route out. Traced it to the adapter sitting on a dead network plus an old static IP left over from a pfSense lab. Fixed it by putting the adapter back on the live network and flipping Windows back to DHCP.
 
+2\. [Fix Kali Clipboard Issues](QuickFixes/Kali_Clipboard_Fix.md) - This lab shows how to fix the clipboard issues usually happens in Kali Linux VM.
+
 ## Quick Labs
 
 1\. [Is Windows SSH Exposed](QuickLabs/Windows_SSH_Exposed.md) - Simple checks to gather information about the Windows SSH: Exposed or Not Exposed.
