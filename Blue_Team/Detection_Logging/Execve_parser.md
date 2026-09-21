@@ -53,11 +53,15 @@ In dummy terms msg=audit(, take everything from the middle of the bracket and st
 NOTE: 3
 r'(\w+)=(?:"([^"]*)"|([^\s]+))', line 
 Table:
+---
+
 | Part | Regex | Captured As | Example Match | Group Value |
 | --- | --- | --- | --- | --- |
 | **Group 1** | `(\w+)` | `field_name` | `exe="..."` | `exe` |
 | **Group 2** | `"([^"]*)"` | `quoted_value` | `"/usr/bin/whoami"` | `/usr/bin/whoami` |
 | **Group 3** | `([^\s]+)` | `bare_value` | `pid=6940` | `6940` |
+
+---
 Breakdown:
 The outer structure: r'...' = This is the raw string and do not treat \ as escape characters.
 (\w+) = Group 1 (field_name) \w+ matches one or more word characters like letters a-z, A-Z , digits 0-9 and underscores _ .... Then it is closed in parentheses (...) to make it a capture group. Matches with item, name , pid and exe etc. 
