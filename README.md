@@ -75,4 +75,6 @@ Hands-on labs I've worked through, with findings, fixes, and evidence.
 
 2\. [Sysmon Commands](Cheat_Sheet/Sysmon_Commands.md) - Basic Sysmon Commands.
 
+3\. [Nmap Commands](Cheat_Sheet/Nmap_Cheat_Sheet.md) - Nmap Commands.
+
 
