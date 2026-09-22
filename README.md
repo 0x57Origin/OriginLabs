@@ -77,4 +77,7 @@ Hands-on labs I've worked through, with findings, fixes, and evidence.
 
 3\. [Nmap Commands](Cheat_Sheet/Nmap_Cheat_Sheet.md) - Nmap Commands.
 
+## Day to Day Task
+1\. [Day 1](TaskList/Day1_Task.md) - Day 1 Tasks.
+
 
