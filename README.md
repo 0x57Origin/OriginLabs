@@ -21,6 +21,8 @@ Hands-on labs I've worked through, with findings, fixes, and evidence.
 
 4\. [Log Coverage Review](Blue_Team/Detection_Logging/Log_Coverage_Review.md) - A paper review of my current logging against six MITRE ATT&CK techniques. Marked each as catch, partial, or miss, then documented what to turn on to close each gap and what it costs in log volume.
 
+5\. [Python Process Command-Line Hunter](Blue_Team/Detection_Logging/Python/Python_Process_CommandLine_Hunter.md) - Python script that lists running Windows processes via `Get-CimInstance` or reads command lines from a text file, extracts PID, name, and command line, and flags suspicious keywords like `-enc` and `downloadstring`. 
+
 ### Hardening & Baselines
 
 1\. [SSH Hardening](Blue_Team/Hardening_Baselines/Ssh_Hardening.md) - Turned off root SSH login and added a fail2ban lockout in a Docker container, then proved it with logs and config checks.
