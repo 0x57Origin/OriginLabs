@@ -80,4 +80,7 @@ Hands-on labs I've worked through, with findings, fixes, and evidence.
 ## Day to Day Task
 1\. [Day 1](TaskList/Day1_Task.md) - Day 1 Tasks.
 
+## Course work
+1\. [WPScan-Recon](CourseWork/WpScan_Pentest_Recon_Part1.md) - UMGC Software Security lab: WPScan recon of Sony's music website, then short answers on URL resolution, alerts, and session/web defenses. A lot of information about Clourflare too.
+
 
