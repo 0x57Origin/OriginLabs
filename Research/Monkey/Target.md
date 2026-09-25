@@ -2,7 +2,7 @@
 
 ---
 
-## Lab 1 — Pick and Pin the Target
+## Lab 1 - Pick and Pin the Target
 
 Repo: https://github.com/monkey/monkey  
 Why this one: small C HTTP server, real project, fits a research loop  
@@ -22,11 +22,11 @@ Small web server written in C for Linux. If you start it, it will wait on a port
 
 Structure:
 
-- mk_core/ — helper tools (memory, files, events)
-- mk_server/ — the actual HTTP brain
-- plugins/ — optional extras
-- htdocs/ — the demo website we already loaded
-- fuzz/ — extra programs for later crash-testing
+- mk_core/ - helper tools (memory, files, events)
+- mk_server/ - the actual HTTP brain
+- plugins/ - optional extras
+- htdocs/ - the demo website we already loaded
+- fuzz/ - extra programs for later crash-testing
 
 Summary: A small server written in C to serve files and it uses HTTP.
 
@@ -117,7 +117,7 @@ Plain HTTP/1.1:
 - User-Agent: I am curl
 - Accept: */* : I take anything
 
-Later on we will find out where in C code does it land. A parser is a computer program that takes a sentence or chunk of data and breaks it down so the computer can understand its meaning. Monkey has a parser too. That text is what Monkey’s parser reads.
+Later on we will find out where in C code does it land. A parser is a computer program that takes a sentence or chunk of data and breaks it down so the computer can understand its meaning. Monkey has a parser too. That text is what Monkey's parser reads.
 
 ## What Monkey sent back
 
