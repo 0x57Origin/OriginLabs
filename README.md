@@ -85,7 +85,5 @@ Hands-on labs I've worked through, with findings, fixes, and evidence.
 
 ## Research
 ---
-### Monkey 
-1\. [Monkey - Target](Research/Monkey/Target.md) - I pinned Monkey HTTP server, built on KALI, proved HTTP/1.1 on 127.0.0.1:2001 with curl.
 
 
