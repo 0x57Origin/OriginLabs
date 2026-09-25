@@ -63,6 +63,8 @@ Hands-on labs I've worked through, with findings, fixes, and evidence.
 
 2\. [Fix Kali Clipboard Issues](QuickFixes/Kali_Clipboard_Fix.md) - This lab shows how to fix the clipboard issues usually happens in Kali Linux VM.
 
+3\. [Kali Internet Fix Interface - eth0](QuickFixes/Kali_Clipboard_Fix.md) - Make Kali’s NAT interface (eth0) get an IP and DNS on every boot. Internet and interface hotfixes.
+
 ## Quick Labs
 
 1\. [Is Windows SSH Exposed](QuickLabs/Windows_SSH_Exposed.md) - Simple checks to gather information about the Windows SSH: Exposed or Not Exposed.
