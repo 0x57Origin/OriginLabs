@@ -123,54 +123,70 @@ So: print the line → append it to the boot file.
 
 - `ps` = Process Status: list the containers in this compose project
 
----
-Result:
+### Result
+
 ```
 NAME                            IMAGE                          COMMAND                  SERVICE           CREATED          STATUS         PORTS
 single-node-wazuh.dashboard-1   wazuh/wazuh-dashboard:4.12.0   "/entrypoint.sh"         wazuh.dashboard   9 seconds ago    Up 3 seconds   443/tcp, 0.0.0.0:443->5601/tcp, [::]:443->5601/tcp
 single-node-wazuh.indexer-1     wazuh/wazuh-indexer:4.12.0     "/entrypoint.sh open…"   wazuh.indexer     16 seconds ago   Up 4 seconds   0.0.0.0:9200->9200/tcp, [::]:9200->9200/tcp
 single-node-wazuh.manager-1     wazuh/wazuh-manager:4.12.0     "/init"                  wazuh.manager     16 seconds ago   Up 4 seconds   0.0.0.0:1514-1515->1514-1515/tcp, [::]:1514-1515->1514-1515/tcp, 0.0.0.0:514->514/udp, [::]:514->514/udp, 0.0.0.0:55000->55000/tcp, [::]:55000->55000/tcp, 1516/tcp
 ```
-All three part of wazuh is up. 
-manager — takes agent logs (1514 / 1515)
-indexer — stores them (9200)
-dashboard — the web UI (443 → 5601)
+
+All three parts of Wazuh are up:
+
+- **manager:** takes agent logs (1514 / 1515)
+- **indexer:** stores them (9200)
+- **dashboard:** the web UI (443 → 5601)
 
 Now what are those numbers? Those are ports. Doors on Kali. Other machines talk to Wazuh through them.
 
-Port,Service,Meaning
-1514,manager,Agent sends logs here (the main pipe)
-1515,manager,Agent enrollment / first handshake
-55000,manager,Wazuh API
-514/udp,manager,Extra syslog door (we are not using it yet)
-9200,indexer,Where events get stored (like a database)
-443,dashboard,HTTPS in your browser. Inside the container the app is on 5601; Docker maps 443 → 5601
+| Port | Service | Meaning |
+|------|---------|---------|
+| 1514 | manager | Agent sends logs here (the main pipe) |
+| 1515 | manager | Agent enrollment / first handshake |
+| 55000 | manager | Wazuh API |
+| 514/udp | manager | Extra syslog door (we are not using it yet) |
+| 9200 | indexer | Where events get stored (like a database) |
+| 443 | dashboard | HTTPS in your browser. Inside the container the app is on 5601; Docker maps 443 → 5601 |
 
 Right now I only care about 2 things:
-Browser: https://127.0.0.1 (443)
-Windows agent later: Kali lab IP 192.168.56.103 ports 1514 and 1515
 
-Well now I did go to https://127.0.0.1 and it states that the site can't be reached. So I searched online and found that dashboard might be the issue, it might be still booting or it crashed. Fixes:
+- **Browser:** `https://127.0.0.1` (443)
+- **Windows agent later:** Kali lab IP `192.168.56.103`, ports 1514 and 1515
+
+---
+
+## Troubleshooting: Dashboard Not Loading
+
+Well, now I did go to `https://127.0.0.1` and it states that the site can't be reached. So I searched online and found that the dashboard might be the issue. It might still be booting, or it crashed. Fixes:
+
 ```
 sudo docker compose ps
 sudo docker compose logs --tail=50 wazuh.dashboard
 curl -k -I https://127.0.0.1
 ```
-Ps = Is the dashboard still up?
-logs = Why is my Wazuh unhappy for?
-curl -k -I https://127.0.0.1 = -k ignore bad cert, -I headers only. I want either HTTP/2 200 or 302 or a login page, not connection refused.
 
-Okay I kind of figured out the problem here: I had bad internet issues so while I was trying to compose I did some dumb stuff and caused the compose issues so now, the dashboard is crashing, it is trying to read an SSL(Secure Sockets Layer) file , but Docker created a folder with that name. So apparently, it happens when your run compose run before making the certs.
+- `ps` = Is the dashboard still up?
+- `logs` = Why is my Wazuh unhappy?
+- `curl -k -I https://127.0.0.1` = `-k` ignore bad cert, `-I` headers only. I want either HTTP/2 200 or 302 or a login page, not connection refused.
+
+Okay, I kind of figured out the problem here. I had bad internet issues, so while I was trying to compose I did some dumb stuff and caused the compose issues. Now the dashboard is crashing. It is trying to read an SSL (Secure Sockets Layer) file, but Docker created a folder with that name. Apparently, this happens when you run compose before making the certs.
+
 Fix in this order:
+
 ```
 cd ~/Desktop/wazuh-docker/single-node
 sudo docker compose down
 ```
+
 Then take a look at the broken certs:
+
 ```
 ls -l config/wazuh_indexer_ssl_certs
 ```
+
 Result:
+
 ```
 total 40
 drwxr-xr-x 2 root root 4096 Sep 25 21:09 admin-key.pem
@@ -184,35 +200,99 @@ drwxr-xr-x 2 root root 4096 Sep 25 21:09 wazuh.indexer.pem
 drwxr-xr-x 2 root root 4096 Sep 25 21:09 wazuh.manager-key.pem
 drwxr-xr-x 2 root root 4096 Sep 25 21:09 wazuh.manager.pem
 ```
-If you see names like wazuh.dashboard.pem with a d at the start of the line, those are folders. Delete that whole cert folder:
+
+If you see names like `wazuh.dashboard.pem` with a `d` at the start of the line, those are folders. Delete that whole cert folder:
+
 ```
 sudo rm -rf config/wazuh_indexer_ssl_certs
 mkdir -p config/wazuh_indexer_ssl_certs
 ```
+
 Then generate real certs:
+
 ```
 sudo docker compose -f generate-indexer-certs.yml run --rm generator
 ```
+
 Check again after that:
+
 ```
 ls -l config/wazuh_indexer_ssl_certs
 ```
-We want files which is (-rw-), not directories (drwx)...
-Start again
+
+We want files (`-rw-`), not directories (`drwx`).
+
+Start again:
+
 ```
 sudo docker compose up -d
 ```
+
 Wait a few minutes, then:
+
 ```
 curl -k -I https://127.0.0.1
 ```
-Okay after that I got HTTP/1.1 302 Found → /app/login from curl command. That is the login page. We will just accept the cert warning. 
+
+Okay, after that I got `HTTP/1.1 302 Found → /app/login` from the curl command. That is the login page. We will just accept the cert warning.
+
 Login:
-User: admin
-Password: SecretPassword
-And that is it for Wazhue for right now.
+
+- **User:** admin
+- **Password:** SecretPassword
+
+And that is it for Wazuh for right now.
+
 ---
-## Back to Windows VM now
+
+## Back to the Windows VM
+
+Here we will keep Kali as the manager: `192.168.56.103`
+
+### 1. Get the Agent Installer
+
+Keep the same version as the server: 4.12.0. But remember, Windows is on the host-only network, so it does not have any internet. So on Kali:
+
+```
+curl -L -o wazuh-agent-4.12.0-1.msi https://packages.wazuh.com/4.x/windows/wazuh-agent-4.12.0-1.msi
+```
+
+After doing that, we will serve the installer via Python 3:
+
+```
+python3 -m http.server 8000
+```
+
+**Code Breakdown**
+
+`curl -L -o wazuh-agent-4.12.0-1.msi <URL>`
+
+- `curl` = download a file from a URL
+- `-L` = follow redirects. If the site says the file moved, curl goes to the new URL instead of crashing.
+- `-o wazuh-agent-4.12.0-1.msi` = save to this filename in the current folder
+
+`python3 -m http.server 8000`
+
+- `-m http.server` = run the built-in module named `http.server` on port 8000
+
+### 2. Download and Install on Windows
+
+Windows 11 VM → any browser →
+
+```
+http://192.168.56.103:8000/wazuh-agent-4.12.0-1.msi
+```
+
+Download it, and we will install it through PowerShell. Because we just downloaded the agent, we must install it by telling it that Kali is the manager.
+
+Run this from the Downloads folder in Admin PowerShell:
+
+```
+msiexec.exe /i wazuh-agent-4.12.0-1.msi /q WAZUH_MANAGER="192.168.56.103"
+NET START Wazuh
+Get-Service Wazuh*
+```
+
 
 
 
