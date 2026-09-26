@@ -160,6 +160,68 @@ Ps = Is the dashboard still up?
 logs = Why is my Wazuh unhappy for?
 curl -k -I https://127.0.0.1 = -k ignore bad cert, -I headers only. I want either HTTP/2 200 or 302 or a login page, not connection refused.
 
+Okay I kind of figured out the problem here: I had bad internet issues so while I was trying to compose I did some dumb stuff and caused the compose issues so now, the dashboard is crashing, it is trying to read an SSL(Secure Sockets Layer) file , but Docker created a folder with that name. So apparently, it happens when your run compose run before making the certs.
+Fix in this order:
+```
+cd ~/Desktop/wazuh-docker/single-node
+sudo docker compose down
+```
+Then take a look at the broken certs:
+```
+ls -l config/wazuh_indexer_ssl_certs
+```
+Result:
+```
+total 40
+drwxr-xr-x 2 root root 4096 Sep 25 21:09 admin-key.pem
+drwxr-xr-x 2 root root 4096 Sep 25 21:09 admin.pem
+drwxr-xr-x 2 root root 4096 Sep 25 21:09 root-ca-manager.pem
+drwxr-xr-x 2 root root 4096 Sep 25 21:09 root-ca.pem
+drwxr-xr-x 2 root root 4096 Sep 25 21:09 wazuh.dashboard-key.pem
+drwxr-xr-x 2 root root 4096 Sep 25 21:09 wazuh.dashboard.pem
+drwxr-xr-x 2 root root 4096 Sep 25 21:09 wazuh.indexer-key.pem
+drwxr-xr-x 2 root root 4096 Sep 25 21:09 wazuh.indexer.pem
+drwxr-xr-x 2 root root 4096 Sep 25 21:09 wazuh.manager-key.pem
+drwxr-xr-x 2 root root 4096 Sep 25 21:09 wazuh.manager.pem
+```
+If you see names like wazuh.dashboard.pem with a d at the start of the line, those are folders. Delete that whole cert folder:
+```
+sudo rm -rf config/wazuh_indexer_ssl_certs
+mkdir -p config/wazuh_indexer_ssl_certs
+```
+Then generate real certs:
+```
+sudo docker compose -f generate-indexer-certs.yml run --rm generator
+```
+Check again after that:
+```
+ls -l config/wazuh_indexer_ssl_certs
+```
+We want files which is (-rw-), not directories (drwx)...
+Start again
+```
+sudo docker compose up -d
+```
+Wait a few minutes, then:
+```
+curl -k -I https://127.0.0.1
+```
+Okay after that I got HTTP/1.1 302 Found → /app/login from curl command. That is the login page. We will just accept the cert warning. 
+Login:
+User: admin
+Password: SecretPassword
+And that is it for Wazhue for right now.
+---
+## Back to Windows VM now
+
+
+
+
+
+
+
+
+
 
 
 
